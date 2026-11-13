@@ -1,0 +1,274 @@
+{
+  "info": {
+    "name": "Lab 2 — Spring Boot CRUD",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "productId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Création",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/products",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ordinateur Portable\",\n  \"description\": \"Laptop 15 pouces\",\n  \"price\": 1200.5,\n  \"quantity\": 10\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 201\", () => pm.response.to.have.status(201));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().id).to.be.a(\"number\"); pm.collectionVariables.set(\"productId\", pm.response.json().id); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Liste",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/products",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().some(p => p.id === Number(pm.collectionVariables.get(\"productId\")))).to.be.true; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lecture",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().name).to.equal(\"Ordinateur Portable\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recherche",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/products/search?name=portable",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().some(p => p.id === Number(pm.collectionVariables.get(\"productId\")))).to.be.true; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modification",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ordinateur Portable Pro\",\n  \"description\": \"Laptop 15 pouces amélioré\",\n  \"price\": 1300,\n  \"quantity\": 8\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json()).to.include({price:1300, quantity:8}); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nom obligatoire",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/products",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"\",\n  \"description\": \"Laptop 15 pouces\",\n  \"price\": 1200.5,\n  \"quantity\": 10\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().errors).to.have.property(\"name\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quantité excessive",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ordinateur Portable\",\n  \"description\": \"Laptop 15 pouces\",\n  \"price\": 1200.5,\n  \"quantity\": 1001\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().detail).to.include(\"1000\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Suppression",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 204\", () => pm.response.to.have.status(204));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.text()).to.equal(\"\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produit introuvable",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/products/{{productId}}",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().detail).to.include(\"introuvable\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vérification de la liste",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/products",
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Réponse attendue\", () => { pm.expect(pm.response.json().some(p => p.id === Number(pm.collectionVariables.get(\"productId\")))).to.be.false; });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

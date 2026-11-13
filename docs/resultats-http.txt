@@ -1,0 +1,10 @@
+POST /api/products -> HTTP 201 | Création
+GET /api/products -> HTTP 200 | Liste
+GET /api/products/1 -> HTTP 200 | Lecture
+GET /api/products/search?name=portable -> HTTP 200 | Recherche
+PUT /api/products/1 -> HTTP 200 | Modification
+POST /api/products -> HTTP 400 | Nom obligatoire
+PUT /api/products/1 -> HTTP 400 | Quantité excessive
+DELETE /api/products/1 -> HTTP 204 | Suppression
+GET /api/products/1 -> HTTP 404 | Produit introuvable
+GET /api/products -> HTTP 200 | Vérification de la liste
