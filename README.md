@@ -26,3 +26,5 @@ La validation renvoie 400 pour des données invalides, notamment une quantité s
 ![Résultats des tests HTTP](docs/resultats-http.png)
 
 [Sortie texte des tests](docs/resultats-http.txt)
+
+Le build Maven (`mvn clean verify`) réussit sous Java 21. La collection exécutée avec Newman contre le JAR produit par Maven valide 20 assertions sur 10 requêtes.
