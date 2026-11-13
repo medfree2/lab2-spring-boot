@@ -28,3 +28,31 @@ La validation renvoie 400 pour des données invalides, notamment une quantité s
 [Sortie texte des tests](docs/resultats-http.txt)
 
 Le build Maven (`mvn clean verify`) réussit sous Java 21. La collection exécutée avec Newman contre le JAR produit par Maven valide 20 assertions sur 10 requêtes.
+
+## Détail des réponses HTTP
+
+Visuels générés à partir des résultats réels de Newman sur le JAR Spring Boot.
+
+### Création · 201
+
+![Création · 201](docs/creation.png)
+
+### Lecture · 200
+
+![Lecture · 200](docs/lecture.png)
+
+### Modification · 200
+
+![Modification · 200](docs/modification.png)
+
+### Validation · 400
+
+![Validation · 400](docs/validation.png)
+
+### Suppression · 204
+
+![Suppression · 204](docs/suppression.png)
+
+### Produit introuvable · 404
+
+![Produit introuvable · 404](docs/introuvable.png)
